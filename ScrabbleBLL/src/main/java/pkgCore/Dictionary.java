@@ -97,8 +97,21 @@ public class Dictionary {
 	 * @return
 	 */
 	private int FindBeginningIndex(ArrayList<Word> arrSearch, String strPartialWord) {
-		return 0;
-	}
+		String temp = "";
+		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') {
+			return 0;
+		}
+		else {
+			for(int i=0; i<strPartialWord.length(); i++) {
+				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') {}
+				else {
+					temp += strPartialWord.charAt(i);
+				}
+			}
+				Word w = new Word(temp);
+				return Collections.binarySearch(this.words, w, Word.CompWord);
+		}	
+	} 
 	/**
 	 * FindEndingIndex - The intention of this method is to find the best place in
 	 * the dictionary to end searching.
@@ -119,6 +132,22 @@ public class Dictionary {
 	 * @return
 	 */
 	private int FindEndingIndex(ArrayList<Word> arrSearch, String strPartialWord) {
+		String temp = "";
+		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') {
+			return 0;
+		}
+		else {
+			for(int i=strPartialWord.length(); i>=0; i--) {
+				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') {
+					strPartialWord.substring(0,i-2)+'z'+strPartialWord.substring()
+				}
+				else {
+					temp += strPartialWord.charAt(i);
+				}
+			}
+				Word w = new Word(temp);
+				return Collections.binarySearch(this.words, w, Word.CompWord);
+		}
 		return 0;
 	}
  
