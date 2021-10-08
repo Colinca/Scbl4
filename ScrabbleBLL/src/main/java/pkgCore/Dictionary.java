@@ -76,8 +76,33 @@ public class Dictionary {
 	 * @param strWord
 	 * @return
 	 */
-	public HashSet<Word> findWords(String strWord) {
+	public HashSet<Word> findWords(String strWord) 
+	{
 		HashSet<Word> FoundWords = new HashSet<Word>();
+		String strBegWord;
+		char strBegWordLastChar;
+		String strEndWord;
+		
+		if (strWord.contains("*"))
+			strBegWord = strWord.substring(0,strWord.indexOf("*"));
+		else if (strWord.contains("?"))
+			strBegWord = strWord.substring(0,strWord.indexOf("?"));
+		else
+			strBegWord = strWord;
+		
+		strBegWordLastChar = strBegWord.charAt(strBegWord.length()-1);
+		strBegWordLastChar++;
+		
+		strEndWord = strBegWord.substring(0,strBegWord.length()-1) + strBegWordLastChar;
+		
+		int begIndex = this.FindBeginningIndex(words, strBegWord);
+		
+		for(int i = begIndex; i < words.size(); i++)
+		{
+			if (this.match(strWord, words.get(i).getWord()))
+				FoundWords.add(words.get(i));
+		}
+		
 		return FoundWords;
 	}
 	
@@ -98,18 +123,23 @@ public class Dictionary {
 	 */
 	private int FindBeginningIndex(ArrayList<Word> arrSearch, String strPartialWord) {
 		String temp = "";
-		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') {
+		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') 
+		{
 			return 0;
 		}
 		else {
-			for(int i=0; i<strPartialWord.length(); i++) {
+			for(int i=0; i<strPartialWord.length(); i++) 
+			{
 				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') {}
-				else {
+				else 
+				{
 					temp += strPartialWord.charAt(i);
 				}
 			}
 				Word w = new Word(temp);
-				return Collections.binarySearch(this.words, w, Word.CompWord);
+				int idx =  Math.abs(Collections.binarySearch(this.words, w, Word.CompWord));
+				
+				return (idx == 0 ? idx: idx - 1);
 		}	
 	} 
 	/**
@@ -133,22 +163,27 @@ public class Dictionary {
 	 */
 	private int FindEndingIndex(ArrayList<Word> arrSearch, String strPartialWord) {
 		String temp = "";
-		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') {
+		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') 
+		{
 			return 0;
 		}
 		else {
-			for(int i=strPartialWord.length(); i>=0; i--) {
-				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') {
-					strPartialWord.substring(0,i-2)+'z'+strPartialWord.substring()
+			for(int i=strPartialWord.length(); i>=0; i--) 
+			{
+				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') 
+				{
+					temp = strPartialWord.substring(0,i-2)+'z';
 				}
-				else {
+				else 
+				{
 					temp += strPartialWord.charAt(i);
 				}
 			}
-				Word w = new Word(temp);
-				return Collections.binarySearch(this.words, w, Word.CompWord);
+			Word w = new Word(temp);
+			int idx = Math.abs(Collections.binarySearch(this.words, w, Word.CompWord));
+			
+			return (idx == 0 ? idx: idx + 1);
 		}
-		return 0;
 	}
  
 
@@ -309,6 +344,11 @@ public class Dictionary {
 			if (second.isEmpty() || second.isBlank())
 				if (first.isEmpty() || first.isBlank())
 					return true;
+			
+			if (second.isEmpty() || second.isBlank())
+				if (first.charAt(0) == '*' || first.charAt(0) == '?')
+					return true;
+			
 
 			if (second.isEmpty() || second.isBlank())
 				if (!first.isEmpty() || !first.isBlank())
