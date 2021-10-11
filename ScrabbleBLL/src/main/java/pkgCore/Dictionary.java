@@ -80,17 +80,14 @@ public class Dictionary {
 	{
 		HashSet<Word> FoundWords = new HashSet<Word>();
 		
-		int begIndex = this.FindBeginningIndex(words, strWord.substring(0,1));
+		int begIndex = this.FindBeginningIndex(words, strWord);
 		int endIndex = this.FindEndingIndex(words, strWord);
 		
-		for (int i = begIndex; i < endIndex; i++)
-		{
-			if (this.match(strWord, words.get(i).getWord()))
-			{
-					FoundWords.add(words.get(i));
+		for (int i = begIndex; i<words.size();i++) {
+			if(this.match(strWord,words.get(i).getWord())) {
+				FoundWords.add(words.get(i));
 			}
 		}
-		
 		return FoundWords;
 	}
 	
@@ -110,10 +107,18 @@ public class Dictionary {
 	 * @return
 	 */
 	private int FindBeginningIndex(ArrayList<Word> arrSearch, String strPartialWord) {
-	
-		Word w = new Word(strPartialWord);
-		int idx = Math.abs(Collections.binarySearch(arrSearch, w, Word.CompWord));
-		return (idx == 0 ? idx: idx - 1);
+		String strBegWord;
+		
+		if(strPartialWord.contains("*")) {
+			strBegWord = strPartialWord.substring(0,strPartialWord.indexOf("*"));}
+		else if(strPartialWord.contains("?")) {
+			strBegWord = strPartialWord.substring(0,strPartialWord.indexOf("?"));}
+		else strBegWord = strPartialWord;
+		
+		Word w = new Word(strBegWord);
+		int idx = Math.abs(Collections.binarySearch(arrSearch, w,Word.CompWord));
+		return (idx==0 ? idx : idx-1);
+		
 	} 
 	/**
 	 * FindEndingIndex - The intention of this method is to find the best place in
@@ -147,13 +152,12 @@ public class Dictionary {
 		char strBegWordLastChar;
 		strBegWordLastChar = strEndWord.charAt(strEndWord.length()-1);
 		strBegWordLastChar++;
-		
 		strEndWord = strEndWord.substring(0, strEndWord.length()-1) + strBegWordLastChar;
 		
 		Word w = new Word(strEndWord);
 		int idx = Math.abs(Collections.binarySearch(arrSearch, w, Word.CompWord));
 		
-		return (idx == 0 ? idx: idx + 1);
+		return (idx == 0 ? idx: idx+1);
 	}
  
 
