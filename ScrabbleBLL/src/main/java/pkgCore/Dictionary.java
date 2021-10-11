@@ -96,8 +96,15 @@ public class Dictionary {
 		strEndWord = strBegWord.substring(0,strBegWord.length()-1) + strBegWordLastChar;
 		
 		int begIndex = this.FindBeginningIndex(words, strBegWord);
+		int endIndex = this.FindEndingIndex(words, strEndWord);
 		
 		for(int i = begIndex; i < words.size(); i++)
+		{
+			if (this.match(strWord, words.get(i).getWord()))
+				FoundWords.add(words.get(i));
+		}
+		
+		for(int i = endIndex; i < words.size(); i++)
 		{
 			if (this.match(strWord, words.get(i).getWord()))
 				FoundWords.add(words.get(i));
@@ -162,28 +169,25 @@ public class Dictionary {
 	 * @return
 	 */
 	private int FindEndingIndex(ArrayList<Word> arrSearch, String strPartialWord) {
-		String temp = "";
-		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') 
-		{
-			return 0;
-		}
-		else {
-			for(int i=strPartialWord.length(); i>=0; i--) 
-			{
-				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') 
-				{
-					temp = strPartialWord.substring(0,i-2)+'z';
-				}
-				else 
-				{
-					temp += strPartialWord.charAt(i);
-				}
-			}
-			Word w = new Word(temp);
-			int idx = Math.abs(Collections.binarySearch(this.words, w, Word.CompWord));
-			
-			return (idx == 0 ? idx: idx + 1);
-		}
+	
+		String strEndWord;
+		if(strPartialWord.contains("*"))
+			strEndWord = strPartialWord.substring(0, strPartialWord.indexOf("*"));
+		else if(strPartialWord.contains("?"))
+			strEndWord = strPartialWord.substring(0, strPartialWord.indexOf("?"));
+		else
+			strEndWord = strPartialWord;
+		
+		char strBegWordLastChar;
+		strBegWordLastChar = strEndWord.charAt(strEndWord.length()-1);
+		strBegWordLastChar++;
+		
+		strEndWord = strEndWord.substring(0, strEndWord.length()-1) + strBegWordLastChar;
+		
+		Word w = new Word(strEndWord);
+		int idx = Math.abs(Collections.binarySearch(arrSearch, w, Word.CompWord));
+		
+		return (idx == 0 ? idx: idx + 1);
 	}
  
 
