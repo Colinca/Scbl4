@@ -105,7 +105,7 @@ public class DictionaryLab4Test {
 		  sb.append(w.getWord());
 		}
 		System.out.println(sb.toString());
-		assertEquals(words.size(), 2);
+		assertEquals(words.size(), 3);
 		Util.PrintEnd(new Throwable().getStackTrace()[0].getMethodName());
 	}		
 	@Test
@@ -123,7 +123,7 @@ public class DictionaryLab4Test {
 		  sb.append(w.getWord());
 		}
 		System.out.println(sb.toString());	
-		assertEquals(words.size(), 28);
+		assertEquals(words.size(), 33);
 		Util.PrintEnd(new Throwable().getStackTrace()[0].getMethodName());
 	}	
 	

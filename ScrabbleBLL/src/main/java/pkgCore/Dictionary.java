@@ -79,35 +79,16 @@ public class Dictionary {
 	public HashSet<Word> findWords(String strWord) 
 	{
 		HashSet<Word> FoundWords = new HashSet<Word>();
-		String strBegWord;
-		char strBegWordLastChar;
-		String strEndWord;
 		
-		if (strWord.contains("*"))
-			strBegWord = strWord.substring(0,strWord.indexOf("*"));
-		else if (strWord.contains("?"))
-			strBegWord = strWord.substring(0,strWord.indexOf("?"));
-		else
-			strBegWord = strWord;
+		int begIndex = this.FindBeginningIndex(words, strWord.substring(0,1));
+		int endIndex = this.FindEndingIndex(words, strWord);
 		
-		strBegWordLastChar = strBegWord.charAt(strBegWord.length()-1);
-		strBegWordLastChar++;
-		
-		strEndWord = strBegWord.substring(0,strBegWord.length()-1) + strBegWordLastChar;
-		
-		int begIndex = this.FindBeginningIndex(words, strBegWord);
-		int endIndex = this.FindEndingIndex(words, strEndWord);
-		
-		for(int i = begIndex; i < words.size(); i++)
+		for (int i = begIndex; i < endIndex; i++)
 		{
 			if (this.match(strWord, words.get(i).getWord()))
-				FoundWords.add(words.get(i));
-		}
-		
-		for(int i = endIndex; i < words.size(); i++)
-		{
-			if (this.match(strWord, words.get(i).getWord()))
-				FoundWords.add(words.get(i));
+			{
+					FoundWords.add(words.get(i));
+			}
 		}
 		
 		return FoundWords;
@@ -129,25 +110,10 @@ public class Dictionary {
 	 * @return
 	 */
 	private int FindBeginningIndex(ArrayList<Word> arrSearch, String strPartialWord) {
-		String temp = "";
-		if(strPartialWord.charAt(0) == '*' || strPartialWord.charAt(0) == '?') 
-		{
-			return 0;
-		}
-		else {
-			for(int i=0; i<strPartialWord.length(); i++) 
-			{
-				if(strPartialWord.charAt(i) == '*' || strPartialWord.charAt(i) == '?') {}
-				else 
-				{
-					temp += strPartialWord.charAt(i);
-				}
-			}
-				Word w = new Word(temp);
-				int idx =  Math.abs(Collections.binarySearch(this.words, w, Word.CompWord));
-				
-				return (idx == 0 ? idx: idx - 1);
-		}	
+	
+		Word w = new Word(strPartialWord);
+		int idx = Math.abs(Collections.binarySearch(arrSearch, w, Word.CompWord));
+		return (idx == 0 ? idx: idx - 1);
 	} 
 	/**
 	 * FindEndingIndex - The intention of this method is to find the best place in
